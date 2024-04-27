@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "npx tsc && node ./build/main.js"
+    "start": "npx tsc && node ./build/main.js",
+    "build": "npx tsc"
   },
   "devDependencies": {
     "@types/node-cron": "^3.0.11",
