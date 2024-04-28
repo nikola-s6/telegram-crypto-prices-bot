@@ -13,6 +13,7 @@ const keyboardOptions = {
     keyboard: [
       [{ text: 'Avalanche' }, { text: 'Solana' }],
       [{ text: 'Bitcoin' }, { text: 'Ethereum' }],
+      [{ text: 'All' }],
     ],
     resize_keyboard: true,
     one_time_keyboard: true,
@@ -57,13 +58,18 @@ bot.onText(/\/prices/, (msg) => {
 
 bot.on('message', async (msg) => {
   const text = msg.text.toLowerCase();
-  if (['avalanche', 'solana', 'ethereum', 'bitcoin'].includes(text)) {
-    const resp = await getPrices([text as Chain]);
+  if (['avalanche', 'solana', 'ethereum', 'bitcoin', 'all'].includes(text)) {
+    let resp;
+    if (text === 'all') {
+      resp = await getPrices(['avalanche', 'solana', 'bitcoin', 'ethereum']);
+    } else {
+      resp = await getPrices([text as Chain]);
+    }
     bot.sendMessage(msg.chat.id, resp, { parse_mode: 'HTML' });
   }
 });
 
-const job = cron.schedule('0 0 10-0 * * *', async () => {
+const job = cron.schedule('0 10-23 * * *', async () => {
   const data = await getPrices(['avalanche', 'solana', 'bitcoin', 'ethereum']);
 
   for (const [chatId, isActive] of activeMap.entries()) {
